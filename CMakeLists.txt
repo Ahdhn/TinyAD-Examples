@@ -72,6 +72,8 @@ endif()
 
 # ===============================================
 # Target TinyAD-Examples
+add_compile_definitions(_USE_MATH_DEFINES)
+add_compile_definitions(_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
 
 file(GLOB_RECURSE TINYAD_EXAMPLES_HEADERS include/*.hh include/*.h src/*hh src/*.h)
 file(GLOB_RECURSE TINYAD_EXAMPLES_SOURCES src/*.cc src/*.c)
@@ -98,7 +100,7 @@ target_link_libraries(TinyAD-Examples PUBLIC
     glow
     imgui
     glow-extras
-    stdc++fs
+    #stdc++fs
     TinyAD
 )
 if (TARGET OpenMP::OpenMP_CXX)

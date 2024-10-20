@@ -25,7 +25,7 @@ inline void append_to_file(
         const fs::path& _file_path,
         const std::string& _line)
 {
-    make_file_directory(_file_path);
+    make_file_directory(_file_path.string());
 
     std::ofstream file(_file_path, std::ofstream::app);
     TINYAD_ASSERT(file.good());

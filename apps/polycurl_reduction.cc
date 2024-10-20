@@ -24,7 +24,7 @@ Eigen::VectorXd read_initial_x(
     // Read field from file.
     int n = 0;
     Eigen::MatrixXd vector_field_4; // #F by 12 matrix: 4 3D vectors per face.
-    directional::read_raw_field(_path, n, vector_field_4);
+    directional::read_raw_field(_path.string(), n, vector_field_4);
     TINYAD_ASSERT_GEQ(n, 4);
     TINYAD_ASSERT_EQ(vector_field_4.rows(), _B1.rows());
     TINYAD_ASSERT_EQ(vector_field_4.rows(), _B2.rows());
@@ -56,7 +56,7 @@ int main()
     // Load mesh
     Eigen::MatrixXd V; // #V by 3
     Eigen::MatrixXi F; // #F by 3
-    igl::readOFF(DATA_PATH / "cheburashka.off", V, F);
+    igl::readOFF(DATA_PATH.string() + "/" + "cheburashka.off", V, F);
 
     // Compute local basis per face
     Eigen::MatrixXd B1; // #F by 3. First basis vector per face.
