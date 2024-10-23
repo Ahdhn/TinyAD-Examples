@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 {
     if (argc != 2) {
         std::cout << "Usage: smoothing <path_to_obj_file>";
-        return 0;            
+        return 0;
     }
 
     glow::glfw::GlfwContext ctx;
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 
     //OpenMesh::IO::read_mesh(mesh, DATA_PATH.string() + "/" + "bunnyhead.obj");
     OpenMesh::IO::read_mesh(mesh, std::string(argv[1]));
-    glow_view_mesh(mesh, true, "Input Mesh");
+    glow_view_mesh(mesh, false, "Input Mesh");
 
 
     //3 because we optimize for the vertex position 
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
     CPUTimer timer;
 
     int num_iterations = 100;
-    double learning_rate = 0.005;
+    double learning_rate = 0.01;
 
     timer.start();
     for (int i = 0; i < num_iterations; ++i) {
@@ -117,7 +117,7 @@ int main(int argc, char** argv)
         mesh.point(v) = _p;
         });
 
-    glow_view_mesh(mesh, true, "Output Mesh");
+    glow_view_mesh(mesh, false, "Output Mesh");
 
     return 0;
 }
