@@ -46,15 +46,15 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    glow::glfw::GlfwContext ctx;
+    //glow::glfw::GlfwContext ctx;
 
-    auto g = gv::grid();
+    //auto g = gv::grid();
 
     OpenMesh::TriMesh mesh;
 
     //OpenMesh::IO::read_mesh(mesh, DATA_PATH.string() + "/" + "bunnyhead.obj");
-    OpenMesh::IO::read_mesh(mesh, std::string(argv[1]));
-    glow_view_mesh(mesh, false, "Input Mesh");
+    OpenMesh::IO::read_mesh(mesh, std::string(argv[1]) );
+    //glow_view_mesh(mesh, false, "Input Mesh");
 
 
     //3 because we optimize for the vertex position 
@@ -69,22 +69,20 @@ int main(int argc, char** argv)
     }
 
 
-    //2 because every edge accesses the two end vertices of the edge 
+    // because every edge accesses the two end vertices of the edge 
     func.add_elements<2>(mesh.edges(), [&](auto& element)->TINYAD_SCALAR_TYPE(element) {
 
         using T = TINYAD_SCALAR_TYPE(element);
 
         OpenMesh::SmartEdgeHandle t = element.handle;
         Eigen::Vector3<T> v0 = element.variables(t.v0());
-        //std::cout << "v0=\n" << v0 << "\n";
-        Eigen::Vector3<T> v1 = element.variables(t.v1());
-        //std::cout << "v1=\n" << v1 << "\n";
+        
+        Eigen::Vector3<T> v1 = element.variables(t.v1());        
 
-        Eigen::Vector3<T> res = (v0 - v1);
-        //std::cout << "res=\n" << res << "\n";
+        Eigen::Vector3<T> res = (v0 - v1);       
 
         T ret = res.squaredNorm();
-        //std::cout << "ret =\n" << ret << "\n";
+        
 
         return ret;
     });
@@ -111,13 +109,19 @@ int main(int argc, char** argv)
     }
     timer.stop();
 
-    std::cout << "\nSmoothing TinyAD: " << timer.elapsed_millis() << " (ms)," << timer.elapsed_millis() / float(num_iterations) << " ms per iteration\n";
+    std::cout << std::quoted(std::string(argv[1])) << ": {\n"
+        << "  \"num_faces\": " << mesh.n_faces() << ",\n"
+        << "  \"total_time_ms\": " << timer.elapsed_millis() << ",\n"
+        << "  \"num_iter\": " << num_iterations << "\n"
+        << "}" << std::endl;
+
+    //std::cout << "\nSmoothing TinyAD: " << timer.elapsed_millis() << " (ms)," << timer.elapsed_millis() / float(num_iterations) << " ms per iteration\n";
 
     func.x_to_data(x, [&](OpenMesh::SmartVertexHandle v, const Eigen::Vector3d& _p) {
         mesh.point(v) = _p;
         });
 
-    glow_view_mesh(mesh, false, "Output Mesh");
+    //glow_view_mesh(mesh, false, "Output Mesh");
 
     return 0;
 }
